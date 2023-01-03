@@ -98,8 +98,8 @@ public class TimeSeriesMappingConfig {
     private final Set<String> outOfMainCcLoads = new HashSet<>();
     private final Set<String> outOfMainCcDanglingLines = new HashSet<>();
 
-    private final Map<String, Set<MappingKey>> timeSeriesToEquipmentMap = new HashMap<>();
-    private final Map<MappingKey, String> equipmentToTimeSeriesMap = new HashMap<>();
+    private final Map<String, Set<MappingKey>> timeSeriesToEquipmentMap = new LinkedHashMap<>();
+    private final Map<MappingKey, String> equipmentToTimeSeriesMap = new LinkedHashMap<>();
 
     private final Map<String, Set<String>> timeSeriesToPlannedOutagesMapping = new LinkedHashMap<>();
 
