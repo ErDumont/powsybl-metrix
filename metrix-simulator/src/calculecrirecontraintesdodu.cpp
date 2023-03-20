@@ -194,11 +194,24 @@ int Calculer::ecrireContraintesDeBordGroupesDodu()
 
     // melange des groupes: afin que l'on n'ait pas besoin de bruiter les couts
     std::vector<std::shared_ptr<Groupe>> grp_melanges;
-    grp_melanges.reserve(res_.nbGroupes_);
-    for (auto grpIt = res_.groupes_.cbegin(); grpIt != res_.groupes_.end(); ++grpIt) {
-        grp_melanges.push_back(grpIt->second);
+    if (!varianteCourante_->randomGroups_.empty()){
+        std::cout<<"Il prend en compte la liste random et elle fait "<<varianteCourante_->randomGroups_.size()<<" de long"<<std::endl;
+        grp_melanges = varianteCourante_->randomGroups_;
     }
-    std::shuffle(grp_melanges.begin(), grp_melanges.end(), Reseau::random);
+    else{
+        std::cout<<"Il se plante"<<std::endl;
+        grp_melanges.reserve(res_.nbGroupes_);
+        for (auto grpIt = res_.groupes_.cbegin(); grpIt != res_.groupes_.end(); ++grpIt) {
+            grp_melanges.push_back(grpIt->second);
+        //     std::cout<<"ordre dans la liste initiale : "<<(*(grpIt->second)).num_<<std::endl;
+        }
+        std::shuffle(grp_melanges.begin(), grp_melanges.end(), Reseau::random);
+    }
+    std::cout<<"Variante;"<<varianteCourante_->num_<<";NombreGroupes;"<<res_.nbGroupes_<<";"<<std::endl;
+    //On essaie de voir la tête des sorties du shuffle
+    for(auto grp_test = grp_melanges.cbegin(); grp_test != grp_melanges.end(); ++grp_test){
+        std::cout<<"Variante;"<<varianteCourante_->num_<<";"<<(*grp_test).get()->nom_<<";"<<(*grp_test).get()->num_<<";"<<std::endl;
+    }
 
     for (int i = 0; i < res_.nbGroupes_; ++i) {
         const auto& grp = grp_melanges[i];
@@ -260,7 +273,6 @@ int Calculer::ecrireContraintesDeBordGroupesDodu()
             // A la hausse
             pbXmin_[numVar] = 0.;
             pbXmax_[numVar] = 0.;
-            pbCoutLineaire_[numVar] = config::configuration().noiseCost();
             // A la baisse
             pbXmin_[numVar + 1] = 0.;
             pbXmax_[numVar + 1] = 0.;

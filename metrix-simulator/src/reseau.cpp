@@ -2545,6 +2545,19 @@ void Reseau::updateBase(const config::VariantConfiguration::VariantConfig& confi
             LOG_ALL(warning) << err::ioDico().msg("ERRGroupeIntrouvable", str, c_fmt("%d", config.num));
         }
     }
+    // std::cout<<"on exécute updateBase()"<<std::endl;
+    // for (const auto& group : config.randomGroups) {
+    //     auto groupesIt = groupes_.find(group);
+    //     if (groupesIt != groupes_.end()) {
+    //         Reseau::randomGroups_.push_back(groupesIt->second);
+    //     } else {
+    //         LOG_ALL(warning) << err::ioDico().msg("ERRGroupeIntrouvable", group, c_fmt("%d", config.num));
+    //     }
+    // }
+    // std::cout<<"updateBas : randomGroups_ est-il vide? "<<Reseau::randomGroups_.empty()<<std::endl;
+    // for(auto grp_test = randomGroups_.cbegin(); grp_test != randomGroups_.end(); ++grp_test){
+    //     std::cout<<";"<<(*grp_test).get()->nom_<<";"<<std::endl;
+    // }
 
     for (const auto& group : config.pmaxGroups) {
         const auto& str = std::get<VariantConfiguration::NAME>(group);
@@ -2734,7 +2747,6 @@ void Reseau::updateBase(const config::VariantConfiguration::VariantConfig& confi
         }
     }
 
-
     Quadripole::SetQuadripoleSortedByName indispoLignesBase;
     for (const auto& line : config.unavailableLines) {
             auto quadsIt = quads_.find(line);
@@ -2775,7 +2787,7 @@ void Reseau::updateVariants(MapQuadinVar& mapping, const config::VariantConfigur
             return;
         }
         variant_index++;
-
+        // std::cout<<"updateVariants (pluriel) bosse sur quelle variante? "<<pair.first<<std::endl;
         updateVariant(mapping, pair.second);
     }
 }
@@ -3032,6 +3044,21 @@ void Reseau::updateVariant(MapQuadinVar& mapping, const config::VariantConfigura
             LOG_ALL(warning) << err::ioDico().msg("ERRIncidentIntrouvable", str, c_fmt("%d", config.num));
         }
     }
+
+    // std::cout<<"On exécute updateVariant() : config.randomGroups vide ? "<< config.randomGroups.empty()<<std::endl;
+    for (const auto& group : config.randomGroups) {
+        auto groupesIt = groupes_.find(group);
+        if (groupesIt != groupes_.end()) {
+            // std::cout<<"On écrit un truc dans variant::randomGroups_ au moins??"<<std::endl;
+            variant->randomGroups_.push_back(groupesIt->second);
+        } else {
+            LOG_ALL(warning) << err::ioDico().msg("ERRGroupeIntrouvable", group, c_fmt("%d", config.num));
+        }
+    }
+    // std::cout<<"Il y a quoi dans variant::randomGroups_ après updateVariant ? "<<std::endl;
+    // for(auto grp_test = variant->randomGroups_.cbegin(); grp_test != variant->randomGroups_.end(); ++grp_test){
+    //     std::cout<<(*grp_test).get()->nom_<<";"<<(*grp_test).get()->num_<<";"<<std::endl;
+    // }
     
     mapping[variant->indispoLignes_].push_back(variant);
 }

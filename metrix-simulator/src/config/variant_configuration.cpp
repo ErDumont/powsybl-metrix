@@ -157,6 +157,9 @@ VariantConfiguration::VariantConfiguration(const std::string& pathname) :
                                  std::placeholders::_1,
                                  std::placeholders::_2)),
         std::make_pair(
+            "GROURAND",
+            std::bind(&VariantConfiguration::processRandomGroups, this, std::placeholders::_1, std::placeholders::_2)),
+        std::make_pair(
             "DTVALDEP",
             std::bind(&VariantConfiguration::processTDPhasing, this, std::placeholders::_1, std::placeholders::_2)),
         std::make_pair(
@@ -384,6 +387,23 @@ void VariantConfiguration::processBalancesConsumption(VariantConfig& variant, st
     LOG(debug) << metrix::log::verbose_config << "Variant " << variant.num << " : region " << std::get<NAME>(region)
                << ", balance objective by consumption value at" << std::get<VALUE>(region);
 }
+
+void VariantConfiguration::processRandomGroups(VariantConfig& variant, std::istringstream& iss) const
+{
+    std::string sub_line;
+    getline(iss, sub_line, ';');
+    rtrim(sub_line);
+    // std::cout<<"Est-ce que variant.randomGroups est rempli? Taille de randomGroups : "<<variant.randomGroups.size()<<std::endl;
+    variant.randomGroups.push_back(sub_line);
+
+    LOG(debug) << metrix::log::verbose_config << "Variant " << variant.num << " : group " << sub_line << 
+    "is in position " << variant.randomGroups.size()-1;
+//     std::cout<<"On a quoi dans variant.randomGroups après processRandomGroups ? "<<std::endl;
+//     for(auto grp_test = variant.randomGroups.cbegin(); grp_test != variant.randomGroups.end(); ++grp_test){
+//         std::cout<<(*grp_test)<<std::endl;
+    // }
+}
+
 
 void VariantConfiguration::processBalancesProduction(VariantConfig& variant, std::istringstream& iss) const
 {
