@@ -70,7 +70,8 @@ public:
 
         std::vector<double_value> probas;
 
-        //Stores the randomized list of groups returnedby the G++9 compiler
+        //Stores the randomized list of groups returned by the G++9 compiler
+        //Used for the testsof the CI
         std::vector<std::string> randomGroups;
     };
     using VariantMap = std::map<int, VariantConfig>;

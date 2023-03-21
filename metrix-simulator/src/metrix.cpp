@@ -134,7 +134,6 @@ int main(int argc, char* argv[])
             if (base) {
                 // base variant is applied to network base without possibility to go back
                 res.updateBase(base->get());
-                // std::cout<<"base->get().randomGroups est vide ? "<<base->get().randomGroups.empty()<<std::endl;
             } else {
                 LOG(debug) << "No base change in variants";
             }
@@ -149,7 +148,6 @@ int main(int argc, char* argv[])
             // of quadripoles
             MapQuadinVar variantesOrdonnees;
             res.updateVariants(variantesOrdonnees, variant_config);
-            // std::cout<<"Est-ce que randomGroups est vide après updateVariants ? "<<res.randomGroups_.empty()<<std::endl;
             time(&end);
             dif = difftime(end, lect);
 

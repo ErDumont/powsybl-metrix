@@ -393,15 +393,10 @@ void VariantConfiguration::processRandomGroups(VariantConfig& variant, std::istr
     std::string sub_line;
     getline(iss, sub_line, ';');
     rtrim(sub_line);
-    // std::cout<<"Est-ce que variant.randomGroups est rempli? Taille de randomGroups : "<<variant.randomGroups.size()<<std::endl;
     variant.randomGroups.push_back(sub_line);
 
     LOG(debug) << metrix::log::verbose_config << "Variant " << variant.num << " : group " << sub_line << 
     "is in position " << variant.randomGroups.size()-1;
-//     std::cout<<"On a quoi dans variant.randomGroups après processRandomGroups ? "<<std::endl;
-//     for(auto grp_test = variant.randomGroups.cbegin(); grp_test != variant.randomGroups.end(); ++grp_test){
-//         std::cout<<(*grp_test)<<std::endl;
-    // }
 }
 
 
