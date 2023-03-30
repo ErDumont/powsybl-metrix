@@ -3039,7 +3039,7 @@ void Reseau::updateVariant(MapQuadinVar& mapping, const config::VariantConfigura
             throw ErrorI(err::ioDico().msg("ERRGrpRandomDifferentGrp", c_fmt("%d", variant->num_)));
         }
     }
-    if (static_cast<int>(config.randomGroups.size()) != 0){
+    if (config.randomGroups.empty()){
         for (const auto& group : groupes_){
             if (std::find(config.randomGroups.begin(), config.randomGroups.end(), group.first) == config.randomGroups.end()){
                 throw ErrorI(err::ioDico().msg("ERRGrpRandomDifferentGrp", c_fmt("%d", variant->num_)));
