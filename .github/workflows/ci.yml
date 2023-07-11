@@ -23,7 +23,9 @@ jobs:
       - name : Install Python Xpress
         run: |
           pip install xpress
-          pip show xpress
+          ls /home/runner/.local/lib/python3.10/site-packages/xpress/lib
+          cd /home/runner/.local/lib/python3.10/site-packages/xpress/lib
+          ln -s libxprs.so* libxprs.so
 
       - name: Checkout sources
         uses: actions/checkout@v2
