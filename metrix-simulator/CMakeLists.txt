@@ -92,10 +92,10 @@ if(USE_ORTOOLS)
     find_package(ortools CONFIG REQUIRED)
 endif()
 
-# Xpress
-if(USE_XPRESS)
-    find_package(XPRESS REQUIRED)
-endif()
+# # Xpress
+# if(USE_XPRESS)
+#     find_package(XPRESS REQUIRED)
+# endif()
 
 # SUITESPARSE
 set(SUITESPARSE_HOME ${CMAKE_CURRENT_BINARY_DIR}/external/suitesparse CACHE PATH "Path where an SuiteSparse installation already exists")
@@ -215,14 +215,14 @@ if(USE_XPRESS)
         PRIVATE 
         USE_XPRESS
     )
-    target_include_directories(${target}
-        PRIVATE
-        XPRESS::XPRESS
-    )
-    target_link_libraries(${target}
-        PRIVATE
-        XPRESS::XPRESS
-    )
+    # target_include_directories(${target}
+    #     PRIVATE
+    #     XPRESS::XPRESS
+    # )
+    # target_link_libraries(${target}
+    #     PRIVATE
+    #     XPRESS::XPRESS
+    # )
 endif()
 
 if (USE_SIRIUS_SHARED)
