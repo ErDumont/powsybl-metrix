@@ -23,6 +23,7 @@ jobs:
       - name : Install Python Xpress
         run: |
           pip install xpress
+          echo "$(pwd)" 
 
       - name: Checkout sources
         uses: actions/checkout@v2
@@ -32,15 +33,9 @@ jobs:
         run: |
           echo "XPRESSDIR=${{ github.workspace }}/xpressmp813" >> $GITHUB_ENV
           echo "XPRESS=${{ github.workspace }}/xpressmp813/bin" >> $GITHUB_ENV
-
-      - name: Checkout Xpress linux
-        if: ${{ matrix.xprs == 'ON' }}
-        uses: actions/checkout@v2
-        with:
-          repository: jdarlay/xpressmp813Lin
-          path: ${{ env.XPRESSDIR }}
-          ref: master
-          token: ${{ secrets.ACCESS_TOKEN }}
+          echo "XPRESSDIR=/home/rohmerarn/.local/lib/python3.8/site-packages/xpress"
+          echo "XPRESS=$XPRESSDIR/license"
+          echo "LD_LIBRARY_PATH=/$XPRESSDIR/lib"
 
       - name: Configure 3rd parties
         working-directory: metrix-simulator
