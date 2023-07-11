@@ -23,7 +23,7 @@ jobs:
       - name : Install Python Xpress
         run: |
           pip install xpress
-          ls /home/runner/.local/lib/python3.8/site-packages/xpress
+          pip show xpress
 
       - name: Checkout sources
         uses: actions/checkout@v2
