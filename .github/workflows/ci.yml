@@ -34,7 +34,7 @@ jobs:
         if: ${{ matrix.xprs == 'ON' }}
         run: |
           echo "XPRESSDIR=/home/runner/.local/lib/python3.10/site-packages/xpress" >> $GITHUB_ENV
-          echo "XPRESS=$XPRESSDIR/license" >> $GITHUB_ENV
+          echo "XPRESS=$XPRESSDIR/license/community-xpauth.xpr" >> $GITHUB_ENV
           echo "LD_LIBRARY_PATH=/$XPRESSDIR/lib" >> $GITHUB_ENV
 
       - name: Configure 3rd parties
