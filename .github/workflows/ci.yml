@@ -24,17 +24,17 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Configure 3rd parties
-        run: >
+        run: |
           mkdir -p $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
           cd $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
           cmake $GITHUB_WORKSPACE/metrix-simulator/external
 
       - name: Build 3rd parties
-        run: >
+        run: |
           cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
 
       - name: Configure CMake
-        run: >
+        run: |
           mkdir $GITHUB_WORKSPACE/metrix-simulator/build-linux
           cd $GITHUB_WORKSPACE/metrix-simulator/build-linux
           cmake $GITHUB_WORKSPACE/metrix-simulator -Wno-dev
