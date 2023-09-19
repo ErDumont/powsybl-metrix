@@ -25,7 +25,9 @@ jobs:
 
       - name: Configure 3rd parties
         run: >
-          cmake -S $GITHUB_WORKSPACE/metrix-simulator/external -B $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
+          mkdir -p $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
+          cd $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
+          cmake $GITHUB_WORKSPACE/metrix-simulator/external
 
       - name: Build 3rd parties
         run: >
