@@ -31,16 +31,18 @@ jobs:
 
       - name: Build 3rd parties
         run: >
-          cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux/external --parallel 2
+          cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
 
       - name: Configure CMake
         run: >
-          cmake -Wno-dev -S $GITHUB_WORKSPACE/metrix-simulator -B $GITHUB_WORKSPACE/metrix-simulator/build-linux
+          mkdir $GITHUB_WORKSPACE/metrix-simulator/build-linux
+          cd $GITHUB_WORKSPACE/metrix-simulator/build-linux
+          cmake $GITHUB_WORKSPACE/metrix-simulator -Wno-dev
           -DCMAKE_BUILD_TYPE=Release
           -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/metrix-simulator/build-linux/install
 
       - name: Build
-        run: cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux --target install --parallel 2
+        run: cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux --target install
 
       - name: Tests
         run: cd $GITHUB_WORKSPACE/metrix-simulator/build-linux && ctest -j8 --output-on-failure
