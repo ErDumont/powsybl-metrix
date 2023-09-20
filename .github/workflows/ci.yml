@@ -20,7 +20,7 @@ jobs:
           yum install -y devtoolset-9
           yum install -y boost
           wget https://github.com/Kitware/CMake/releases/download/v3.27.5/cmake-3.27.5-linux-x86_64.sh
-          bash cmake-3.27.5-linux-x86_64.sh
+          yes | bash cmake-3.27.5-linux-x86_64.sh
 
       - name: Checkout sources
         uses: actions/checkout@v1
