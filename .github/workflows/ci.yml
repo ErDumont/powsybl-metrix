@@ -63,7 +63,10 @@ jobs:
           java-version: 11
 
       - name: Install gcovr
-        run: pip install gcovr
+        run: |
+          yum update -y
+          yum install -y python3 python3-pip
+          pip install gcovr
 
       - name: Install Sonar wrapper
         working-directory: ${{ runner.workspace }}
