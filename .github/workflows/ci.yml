@@ -18,21 +18,17 @@ jobs:
           yum install -y epel-release
           yum install -y git redhat-lsb-core make wget centos-release-scl scl-utils
           yum install -y devtoolset-9
-      
-      - name: Install Boost
-        run: |
-          source /opt/rh/devtoolset-9/enable    
-          wget https://boostorg.jfrog.io/artifactory/main/release/1.73.0/source/boost_1_73_0.tar.gz
-          tar -xzvf ./boost_1_73_0.tar.gz
-          cd boost_1_73_0
-          ./bootstrap.sh --prefix=/usr/lib/x86_64-linux-gnu/
-          ./b2 install
-
 
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.13
         with:
           cmake-version: '3.22.x'
+      
+      - name: Install boost  
+        uses: MarkusJx/install-boost@v2.4.4  
+        id: install-boost  
+        with:
+          boost_version: 1.73.0
 
       - name: Checkout sources
         uses: actions/checkout@v1
