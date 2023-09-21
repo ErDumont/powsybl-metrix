@@ -12,13 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     container: 'centos:centos7'
     steps:
-      - name: Install Boost
+      - name: Install Dependancies
         run: |
           yum update -y
           yum install -y epel-release
           yum install -y git redhat-lsb-core make wget centos-release-scl scl-utils
           yum install -y devtoolset-9
-          yum install -y boost
+      
+      - name: Install Boost
+        run: |
+          source /opt/rh/devtoolset-9/enable    
+          wget https://boostorg.jfrog.io/artifactory/main/release/1.73.0/source/boost_1_73_0.tar.gz
+          tar -xzvf ./boost_1_73_0.tar.gz
+          cd boost_1_73_0
+          ./bootstrap.sh --prefix=/usr/lib/x86_64-linux-gnu/
+          ./b2 install
+
+
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.13
         with:
@@ -36,7 +46,7 @@ jobs:
 
       - name: Build 3rd parties
         run: |
-          cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
+          cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux/external --parallel 5
 
       - name: Configure CMake
         run: |
@@ -48,7 +58,7 @@ jobs:
           -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/metrix-simulator/build-linux/install
 
       - name: Build
-        run: cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux --target install
+        run: cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux --target install --parallel 5
 
       - name: Tests
         run: cd $GITHUB_WORKSPACE/metrix-simulator/build-linux && ctest -j8 --output-on-failure
@@ -66,8 +76,16 @@ jobs:
       - name: Install gcovr
         run: |
           yum update -y
-          yum install -y python3 python3-pip
+          yum install -y epel-release
+          yum install -y git redhat-lsb-core make wget centos-release-scl scl-utils
+          yum install -y devtoolset-9
+          yum install -y python3 python3-pip wget
           pip3 install gcovr
+
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.13
+        with:
+          cmake-version: '3.22.x'
 
       - name: Install Sonar wrapper
         working-directory: ${{ runner.workspace }}
@@ -94,7 +112,8 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Configure 3rd parties
-        run: >
+        run: |
+          source /opt/rh/devtoolset-9/enable
           cmake -S $GITHUB_WORKSPACE/metrix-simulator/external -B $GITHUB_WORKSPACE/metrix-simulator/build/external
 
       - name: Build 3rd parties
@@ -102,7 +121,8 @@ jobs:
           cmake --build $GITHUB_WORKSPACE/metrix-simulator/build/external --parallel 2
 
       - name: Configure CMake
-        run: >
+        run: |
+          source /opt/rh/devtoolset-9/enable
           cmake -Wno-dev -S $GITHUB_WORKSPACE/metrix-simulator -B $GITHUB_WORKSPACE/metrix-simulator/build
           -DCMAKE_BUILD_TYPE=Debug
           -DCODE_COVERAGE=TRUE
