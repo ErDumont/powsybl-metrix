@@ -125,10 +125,9 @@ jobs:
           cmake -Wno-dev -S $GITHUB_WORKSPACE/metrix-simulator -B $GITHUB_WORKSPACE/metrix-simulator/build -DCMAKE_BUILD_TYPE=Debug -DCODE_COVERAGE=TRUE -DMETRIX_RUN_ALL_TESTS=OFF -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/metrix-simulator/build/install
 
       - name: Build
-        run: >
-          ${{ runner.workspace }}/build-wrapper-linux-x86/build-wrapper-linux-x86-64
-          --out-dir $GITHUB_WORKSPACE/metrix-simulator/build/output
-          cmake --build $GITHUB_WORKSPACE/metrix-simulator/build --parallel 2 --target install
+        run: |
+          source /opt/rh/devtoolset-9/enable
+          ${{ runner.workspace }}/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/metrix-simulator/build/output cmake --build $GITHUB_WORKSPACE/metrix-simulator/build --parallel 2 --target install
 
       - name: Tests
         run: cd $GITHUB_WORKSPACE/metrix-simulator/build && ctest -j8 --output-on-failure
