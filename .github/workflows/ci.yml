@@ -24,6 +24,9 @@ jobs:
         with:
           cmake-version: '3.22.x'
       
+      - name: Checkout sources
+        uses: actions/checkout@v1
+
       - name: Install boost
         run: |  
           source /opt/rh/devtoolset-9/enable
@@ -33,15 +36,12 @@ jobs:
           ./bootstrap.sh --prefix=/usr/local
           ./b2 install --without-python -j 5
           cd ..
-
-      - name: Checkout sources
-        uses: actions/checkout@v1
-
+        
       - name: Configure 3rd parties
         run: |
           source /opt/rh/devtoolset-9/enable
           cmake -S $GITHUB_WORKSPACE/metrix-simulator/external -B $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
-
+        
       - name: Build 3rd parties
         run: |
           cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux/external --parallel 2
@@ -97,6 +97,9 @@ jobs:
         env:
           SONAR_SCANNER_VERSION: 3.3.0.1492
 
+      - name: Checkout sources
+        uses: actions/checkout@v1
+
       - name: Install boost
         run: |  
           source /opt/rh/devtoolset-9/enable
@@ -106,9 +109,6 @@ jobs:
           ./bootstrap.sh --prefix=/usr/local
           ./b2 install --without-python -j 5
           cd ..
-
-      - name: Checkout sources
-        uses: actions/checkout@v1
 
       - name: Configure 3rd parties
         run: |
