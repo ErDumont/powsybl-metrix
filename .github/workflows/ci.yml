@@ -32,6 +32,7 @@ jobs:
           cd boost_1_73_0
           ./bootstrap.sh --prefix=/usr/local
           ./b2 install --without-python -j 5
+          cd ..
 
       - name: Checkout sources
         uses: actions/checkout@v1
@@ -39,28 +40,22 @@ jobs:
       - name: Configure 3rd parties
         run: |
           source /opt/rh/devtoolset-9/enable
-          mkdir -p $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
-          cd $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
-          cmake $GITHUB_WORKSPACE/metrix-simulator/external
+          cmake -S $GITHUB_WORKSPACE/metrix-simulator/external -B $GITHUB_WORKSPACE/metrix-simulator/build-linux/external
 
       - name: Build 3rd parties
         run: |
-          cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux/external --parallel 5
+          cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux/external --parallel 2
 
       - name: Configure CMake
         run: |
           source /opt/rh/devtoolset-9/enable
-          mkdir -p $GITHUB_WORKSPACE/metrix-simulator/build-linux
-          cd $GITHUB_WORKSPACE/metrix-simulator/build-linux
-          cmake $GITHUB_WORKSPACE/metrix-simulator -Wno-dev
-          -DCMAKE_BUILD_TYPE=Release
-          -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/metrix-simulator/build-linux/install
+          cmake -S $GITHUB_WORKSPACE/metrix-simulator -Wno-dev -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/metrix-simulator/build-linux/install -B $GITHUB_WORKSPACE/metrix-simulator/build-linux
 
       - name: Build
-        run: cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux --target install --parallel 5
+        run: cmake --build $GITHUB_WORKSPACE/metrix-simulator/build-linux --target install --parallel 2
 
       - name: Tests
-        run: cd $GITHUB_WORKSPACE/metrix-simulator/build-linux && ctest -j8 --output-on-failure
+        run: cd $GITHUB_WORKSPACE/metrix-simulator/build-linux && ctest -j2 --output-on-failure
 
   qa:
     name: QA - CI
@@ -102,10 +97,15 @@ jobs:
         env:
           SONAR_SCANNER_VERSION: 3.3.0.1492
 
-      - name: Install Boost
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y libboost-all-dev
+      - name: Install boost
+        run: |  
+          source /opt/rh/devtoolset-9/enable
+          wget https://boostorg.jfrog.io/artifactory/main/release/1.73.0/source/boost_1_73_0.tar.gz
+          tar -xzvf ./boost_1_73_0.tar.gz
+          cd boost_1_73_0
+          ./bootstrap.sh --prefix=/usr/local
+          ./b2 install --without-python -j 5
+          cd ..
 
       - name: Checkout sources
         uses: actions/checkout@v1
@@ -122,11 +122,7 @@ jobs:
       - name: Configure CMake
         run: |
           source /opt/rh/devtoolset-9/enable
-          cmake -Wno-dev -S $GITHUB_WORKSPACE/metrix-simulator -B $GITHUB_WORKSPACE/metrix-simulator/build
-          -DCMAKE_BUILD_TYPE=Debug
-          -DCODE_COVERAGE=TRUE
-          -DMETRIX_RUN_ALL_TESTS=OFF
-          -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/metrix-simulator/build/install
+          cmake -Wno-dev -S $GITHUB_WORKSPACE/metrix-simulator -B $GITHUB_WORKSPACE/metrix-simulator/build -DCMAKE_BUILD_TYPE=Debug -DCODE_COVERAGE=TRUE -DMETRIX_RUN_ALL_TESTS=OFF -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/metrix-simulator/build/install
 
       - name: Build
         run: >
