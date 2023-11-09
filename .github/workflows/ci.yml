@@ -26,6 +26,7 @@ jobs:
           export SIRIUS=$(pwd)/sirius_install/bin
 
       - name: Install Boost via conan
+        working-directory: metrix-simulator
         run: |
           pip3 install conan=='1.61.0'
           conan install -if build -pr:b default -pr:h default . --build missing --build outdated --settings build_type=Release
