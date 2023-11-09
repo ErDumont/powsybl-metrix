@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Install Sirius
         run: |
-          curl -o windows-latest_sirius-solver.zip https://github.com/rte-france/sirius-solver/releases/download/antares-integration-v1.4/windows-latest_sirius-solver.zip
+          curl -o windows-latest_sirius-solver.zip http://github.com/rte-france/sirius-solver/releases/download/antares-integration-v1.4/windows-latest_sirius-solver.zip
           dir
           unzip windows-latest_sirius-solver.zip
           mv windows-latest_sirius-solver-install sirius_install
