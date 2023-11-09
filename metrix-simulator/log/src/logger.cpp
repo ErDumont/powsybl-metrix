@@ -19,6 +19,27 @@
 
 using namespace boost::log;
 
+namespace query {
+    char localtime_r( ... );
+
+    struct has_localtime_r
+        { enum { value = sizeof localtime_r( std::declval< std::time_t * >(), std::declval< std::tm * >() )
+                        == sizeof( std::tm * ) }; };
+
+
+    template< bool available > struct safest_localtime {
+        static std::tm *call( std::time_t const *t, std::tm *r )
+            { return localtime_r( t, r ); }
+    };
+
+    template<> struct safest_localtime< false > {
+        static std::tm *call( std::time_t const *t, std::tm *r )
+            { return std::localtime( t ); }
+    };
+}
+std::tm *localtime_r( std::time_t const *t, std::tm *r )
+    { return query::safest_localtime< query::has_localtime_r::value >().call( t, r ); }
+
 namespace metrix
 {
 namespace log
@@ -212,8 +233,8 @@ void Logger::formatter(const record_view& view, formatting_ostream& os) const
     std::string time_formatted;
     time_formatted.assign(nb_char_time_formatted, '\0');
     std::tm l_tm;
-    localtime_r(&time, &l_tm);
-    std::strftime(&time_formatted[0], nb_char_time_formatted, "%a %b %d %H:%M:%S %Y", &l_tm);
+    // localtime_r(&time, &l_tm);
+    // std::strftime(&time_formatted[0], nb_char_time_formatted, "%a %b %d %H:%M:%S %Y", &l_tm);
 
     os << "[" << time_formatted << "] [" << severities_.at(lvl) << "] "
        << view.attribute_values()["File"].extract<std::string>() << ",l"

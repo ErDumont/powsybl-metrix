@@ -1,1 +1,1 @@
-../../sirius/curatif/CMakeLists.txt
+"../../sirius/curatif/CMakeLists.txt"

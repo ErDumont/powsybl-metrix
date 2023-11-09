@@ -69,7 +69,7 @@ endif()
 
 set(sirius_solver_url https://github.com/jdarlay/sirius-solver)
 set(sirius_tag "metrix-integration-v0.1")
-set(sirius_asset "ubuntu-20.04_sirius-solver.zip")
+set(sirius_asset "windows-latest_sirius-solver.zip")
 
 set(sirius_solver_ROOT ${CMAKE_CURRENT_BINARY_DIR}/sirius_solver)
 find_package(sirius_solver QUIET)
