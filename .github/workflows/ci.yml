@@ -27,6 +27,7 @@ jobs:
 
       - name: Install Boost via conan
         run: |
+          cd powsybl-metrix/metrix-simulator
           pip3 install conan=='1.61.0'
           conan install -if build -pr:b default -pr:h default . --build missing --build outdated --settings build_type=Release
 
@@ -34,41 +35,36 @@ jobs:
         working-directory: metrix-simulator
         run: |
           cmake -S external \
-                -B build-linux/external \
-                -DCMAKE_BUILD_TYPE=Release \
-                -DUSE_XPRESS=${{ matrix.xprs }} \
-                -DXPRESS_ROOT="${{ env.XPRESSDIR }}"
-
+                -B build/external \
+                -DCMAKE_BUILD_TYPE=Release
       - name: Build 3rd parties
         working-directory: metrix-simulator
-        run: cmake --build build-linux/external --parallel 2
+        run: cmake --build build/external --parallel 2 --config Release
 
       - name: Configure CMake
         working-directory: metrix-simulator
         run: |
           cmake -S . \
-                -B build-linux \
+                -B build \
                 -DCMAKE_BUILD_TYPE=Release \
-                -DCMAKE_INSTALL_PREFIX=build-linux/install \
+                -DCMAKE_INSTALL_PREFIX=build/install \
                 -DINSTALL_CMAKE_DIR=. \
-                -DUSE_ORTOOLS=ON \
-                -DUSE_XPRESS=${{ matrix.xprs }} \
-                -DXPRESS_ROOT="${{ env.XPRESSDIR }}"
+                -DUSE_ORTOOLS=ON
 
       - name: Build
         working-directory: metrix-simulator
-        run: cmake --build build-linux --target install --parallel 2
+        run: cmake --build build --target install --parallel 2 --config Release
 
       - name: Tests
-        working-directory: metrix-simulator/build-linux
+        working-directory: metrix-simulator/build
         run: ctest -j8 --output-on-failure
 
       - name: Prepare metrix install
         id: metrix-install
-        working-directory: metrix-simulator/build-linux
+        working-directory: metrix-simulator/build
         run: |
           [ ${{ matrix.xprs }} == "ON" ] && ARCHIVE_NAME=metrix_xprs || ARCHIVE_NAME=metrix
-          ARCHIVE_PATH="${{ github.workspace }}/metrix-simulator/build-linux/install"
+          ARCHIVE_PATH="${{ github.workspace }}/metrix-simulator/build/install"
           echo "::set-output name=archive_name::$ARCHIVE_NAME"
           echo "::set-output name=archive_path::$ARCHIVE_PATH"
 
