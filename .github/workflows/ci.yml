@@ -27,23 +27,27 @@ jobs:
 
       - name: Install Boost via conan
         run: |
-          cd powsybl-metrix/metrix-simulator
+          cd powsybl-metrix/powsybl-metrix/metrix-simulator
           pip3 install conan=='1.61.0'
           conan install -if build -pr:b default -pr:h default . --build missing --build outdated --settings build_type=Release
 
       - name: Configure 3rd parties
-        working-directory: metrix-simulator
+        # working-directory: metrix-simulator
         run: |
+          cd powsybl-metrix/powsybl-metrix/metrix-simulator
           cmake -S external \
                 -B build/external \
                 -DCMAKE_BUILD_TYPE=Release
       - name: Build 3rd parties
-        working-directory: metrix-simulator
-        run: cmake --build build/external --parallel 2 --config Release
+        # working-directory: metrix-simulator
+        run: |
+          cd powsybl-metrix/powsybl-metrix/metrix-simulator
+          cmake --build build/external --parallel 2 --config Release
 
       - name: Configure CMake
-        working-directory: metrix-simulator
+        # working-directory: metrix-simulator
         run: |
+          cd powsybl-metrix/powsybl-metrix/metrix-simulator
           cmake -S . \
                 -B build \
                 -DCMAKE_BUILD_TYPE=Release \
@@ -52,12 +56,16 @@ jobs:
                 -DUSE_ORTOOLS=ON
 
       - name: Build
-        working-directory: metrix-simulator
-        run: cmake --build build --target install --parallel 2 --config Release
+        # working-directory: metrix-simulator
+        run: |
+          cd powsybl-metrix/powsybl-metrix/metrix-simulator
+          cmake --build build --target install --parallel 2 --config Release
 
       - name: Tests
-        working-directory: metrix-simulator/build
-        run: ctest -j8 --output-on-failure
+        # working-directory: metrix-simulator/build
+        run: |
+          cd powsybl-metrix/powsybl-metrix/metrix-simulator/build
+          ctest -j8 --output-on-failure
 
       - name: Prepare metrix install
         id: metrix-install
