@@ -27,6 +27,7 @@ jobs:
 
       - name: Install Boost via conan
         run: |
+          pip3 install conan=='1.61.0'
           conan install -if build -pr:b default -pr:h default . --build missing --build outdated --settings build_type=Release
 
       - name: Configure 3rd parties
